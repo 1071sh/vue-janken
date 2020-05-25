@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>vue-janken</title>
+    </head>
+    <body>
+        <div id="app">
+            <div>
+                <p>結果 : {{ result }}</p>
+                <p>試合数 : {{ gameCount }}</p>
+                <p>勝ち数 : {{ winCount }}</p>
+                <p>負け数 : {{ loseCount }}</p>
+                <p>勝率 : {{ winningPercentage }}%</p>
+            </div>
+            <div>
+                <p>敵の手は : {{ enemyHand }}</p>
+            </div>
+            <button v-on:click="judeje('グー')">グー</button>
+            <button v-on:click="judeje('チョキ')">チョキ</button>
+            <button v-on:click="judeje('パー')">パー</button>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <script>
+            var janken = new Vue({
+                el: '#app',
+                data: {
+                    handAry: ['グー', 'チョキ', 'パー'],
+                    enemyHand: '',
+                    result: '',
+                    winCount: 0,
+                    loseCount: 0,
+                    gameCount: 0,
+                    winningPercentage: '',
+                },
+                methods: {
+                    judeje: function (myHand) {
+                        var index = Math.floor(Math.random() * this.handAry.length);
+                        this.enemyHand = this.handAry[index];
+
+
+                        //引き分け
+                        if (myHand === this.enemyHand) {
+                            this.result = '引き分け';
+                            this.gameCount++;
+                        }
+
+                        //勝ち
+                        if (myHand === 'パー' && this.enemyHand === 'グー') {
+                            this.result = '勝ち';
+                            this.winCount++;
+                            this.gameCount++;
+                        }
+                        if (myHand === 'チョキ' && this.enemyHand === 'パー') {
+                            this.result = '勝ち';
+                            this.winCount++;
+                            this.gameCount++;
+                        }
+                        if (myHand === 'グー' && this.enemyHand === 'チョキ') {
+                            this.result = '勝ち';
+                            this.winCount++;
+                            this.gameCount++;
+                        }
+
+
+                        //負け
+                        if (myHand === 'パー' && this.enemyHand === 'チョキ') {
+                            this.result = '負け';
+                            this.loseCount++;
+                            this.gameCount++;
+                        }
+                        if (myHand === 'チョキ' && this.enemyHand === 'グー') {
+                            this.result = '負け';
+                            this.loseCount++;
+                            this.gameCount++;
+                        }
+                        if (myHand === 'グー' && this.enemyHand === 'パー') {
+                            this.result = '負け';
+                            this.loseCount++;
+                            this.gameCount++;
+                        }
+
+                        // 試合数
+                        var percent = Math.floor((this.winCount / this.gameCount) * 100);
+                        // 小数点切り捨て
+                        if (!Number.isNaN(percent)) {
+                            this.winningPercentage = percent;
+                        }
+                    }
+                }
+            })
+        </script>
+    </body>
+</html>
